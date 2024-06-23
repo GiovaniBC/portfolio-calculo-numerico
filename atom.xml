@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Portfólio cálculo numérico</title>
+  
+  
+  <link href="http://portfoliocngiovani.com/atom.xml" rel="self"/>
+  
+  <link href="http://portfoliocngiovani.com/"/>
+  <updated>2024-06-23T01:19:50.065Z</updated>
+  <id>http://portfoliocngiovani.com/</id>
+  
+  <author>
+    <name>Giovani Bruno Corrêa</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Lista de Exercícios</title>
+    <link href="http://portfoliocngiovani.com/2024/06/22/lista/"/>
+    <id>http://portfoliocngiovani.com/2024/06/22/lista/</id>
+    <published>2024-06-23T01:00:00.000Z</published>
+    <updated>2024-06-23T01:19:50.065Z</updated>
+    
+    <content type="html"><![CDATA[<p>Use a calculadora desenvolvida a seguir para apresentar a solução dos três seguintes exercícios:</p><div class="container">    <h1 class="text-center">Interpolação de Newton e Lagrange</h1>    <form id="interpolationForm">        <div class="form-group">            <label for="xValues">Valores X (separação por vígula)</label>            <input type="text" class="form-control" id="xValues" placeholder="ex: 11,12,13,14,15">        </div>        <div class="form-group">            <label for="yValues">Valores Y (separação por vígula)</label>            <input type="text" class="form-control" id="yValues" placeholder="ex: 2.397895,2.484907,2.564949,2.639057,2.708050">        </div>        <div class="form-group">            <label for="tValue">Valor de t</label>            <input type="text" class="form-control" id="tValue" placeholder="ex: 12.3">        </div>        <button type="button" class="btn btn-primary" onclick="calculateNewton()">Calcular Newton</button>        <button type="button" class="btn btn-secondary" onclick="calculateLagrange()">Calcular Lagrange</button>    </form>    <div id="result" class="result"></div></div><script>    function dividedDiff(x, y) {        let n = y.length;        let coef = [y.slice()];        for (let j = 1; j < n; j++) {            let row = [];            for (let i = 0; i < n - j; i++) {                row.push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));            }            coef.push(row);        }        return coef.map(row => row[0]);    }    function newtonPolynomial(x, y) {        let coef = dividedDiff(x, y);        let n = coef.length;        return function(t) {            let result = coef[0];            for (let i = 1; i < n; i++) {                let term = coef[i];                for (let j = 0; j < i; j++) {                    term *= (t - x[j]);                }                result += term;            }            return result;        };    }    function lagrangePolynomial(x, y) {        function L(k, t) {            let result = 1;            for (let i = 0; i < x.length; i++) {                if (i !== k) {                    result *= (t - x[i]) / (x[k] - x[i]);                }            }            return result;        }        return function(t) {            let result = 0;            for (let k = 0; k < y.length; k++) {                result += y[k] * L(k, t);            }            return result;        };    }    function calculateNewton() {        let xValues = document.getElementById('xValues').value.split(',').map(Number);        let yValues = document.getElementById('yValues').value.split(',').map(Number);        let tValue = parseFloat(document.getElementById('tValue').value);        let polynomial = newtonPolynomial(xValues, yValues);        let result = polynomial(tValue);        document.getElementById('result').innerHTML = `<div class="alert alert-primary">Resultado do polinômio de Newton em t=${tValue}: ${result}</div>`;    }    function calculateLagrange() {        let xValues = document.getElementById('xValues').value.split(',').map(Number);        let yValues = document.getElementById('yValues').value.split(',').map(Number);        let tValue = parseFloat(document.getElementById('tValue').value);        let polynomial = lagrangePolynomial(xValues, yValues);        let result = polynomial(tValue);        document.getElementById('result').innerHTML = `<div class="alert alert-secondary">Resultado do polinômio de Lagrange em t=${tValue}: ${result}</div>`;    }</script><link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"><style>    body {        padding: 20px;    }    .result {        margin-top: 20px;    }</style><p><img src="/ex1.png"><br><img src="/ex2.png"><br><img src="/ex3.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Use a calculadora desenvolvida a seguir para apresentar a solução dos três seguintes exercícios:&lt;/p&gt;
+&lt;div class=&quot;container&quot;&gt;
+    &lt;h1 clas</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Folha da Árvore</title>
+    <link href="http://portfoliocngiovani.com/2024/06/22/folha/"/>
+    <id>http://portfoliocngiovani.com/2024/06/22/folha/</id>
+    <published>2024-06-23T00:00:00.000Z</published>
+    <updated>2024-06-23T01:32:47.263Z</updated>
+    
+    <content type="html"><![CDATA[<p>Nesta atividade foi usada uma folha e tracou-se alguns pontos referentes a sua curvatura. Por meio desses pontos foi feito a interpolação polinomial de Newton</p><p>Aqui está uma imagem das medidas da folha:</p><p><img src="/folha.png"></p><p>Os valores de ( x ) e ( y ) obtidos foram:</p><p>( x &#x3D; 1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9 )</p><p>( y &#x3D; 0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8 )</p><p>A seguir pode-se calcular a interpolação a partir dos valores obtidos da folha:</p><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Interpolação Polinomial de Newton</title>    <style>        body {            font-family: Arial, sans-serif;            max-width: 9000px;            margin: 0 auto;            padding: 20px;        }        h1 {            text-align: center;        }        #inputForm {            text-align: center;            margin-top: 20px;        }        #result {            margin-top: 20px;            padding: 10px;            background-color: #f0f0f0;            border: 1px solid #ccc;            text-align: center;        }    </style></head><body>    <h1>Interpolação Polinomial de Newton</h1>      <form id="inputForm">        <label for="t">Insira o valor de <em>t</em>:</label>        <input type="number" id="t" step="any" placeholder="Digite o valor de t">        <button type="submit">Calcular</button>    </form>    <div id="result"></div>    <script>        function divided_diff(x, y) {            /**             * Calcula a tabela de diferenças divididas para os pontos (x, y).             */            let n = y.length;            let coef = [y.slice()];  // Inicializa com y (f(x)).            for (let j = 1; j < n; j++) {                coef.push([]);                for (let i = 0; i < n - j; i++) {                    coef[j].push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));                }            }            return coef.map(row => row[0]);  // Retorna os coeficientes de Newton.        }        function newton_polynomial(x, y) {            /**             * Calcula o polinômio interpolador de Newton.             */            let coef = divided_diff(x, y);            let n = coef.length;            return function(t) {                let result = coef[0];                for (let i = 1; i < n; i++) {                    let term = coef[i];                    for (let j = 0; j < i; j++) {                        term *= (t - x[j]);                    }                    result += term;                }                return result;            };        }        // Valores de x e y        let x = [1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9];        let y = [0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8];        // Selecionar elementos do formulário e resultado        const form = document.getElementById('inputForm');        const tInput = document.getElementById('t');        const resultDiv = document.getElementById('result');        // Função para lidar com o envio do formulário        form.addEventListener('submit', function(event) {            event.preventDefault();  // Evitar o envio padrão do formulário            let t = parseFloat(tInput.value);  // Obter o valor de t inserido pelo usuário            // Obter o polinômio interpolador de Newton            let polynomial = newton_polynomial(x, y);            // Calcular o valor do polinômio interpolador para o valor de t inserido            let interpolationResult = polynomial(t);            // Exibir o resultado na página            resultDiv.innerHTML = `                <p>Valores de x utilizados: ${x.join(', ')}</p>                <p>Valores de y correspondentes: ${y.join(', ')}</p>                <p>O valor do polinômio interpolador em ${t} é ${interpolationResult.toFixed(4)}</p>            `;        });    </script></body><p>Abaixo está a lógica do código em JavaScript usado para calcular o polinômio interpolador de Newton com esses valores:</p><pre><code>function divided_diff(x, y) &#123;let n = y.length;let coef = [y.slice()];        for (let j = 1; j &lt; n; j++) &#123;            coef.push([]);            for (let i = 0; i &lt; n - j; i++) &#123;                coef[j].push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));            &#125;        &#125;        return coef.map(row =&gt; row[0]);  // Retorna os coeficientes de Newton.    &#125;    function newton_polynomial(x, y) &#123;        /**         * Calcula o polinômio interpolador de Newton.         */        let coef = divided_diff(x, y);        let n = coef.length;        return function(t) &#123;            let result = coef[0];            for (let i = 1; i &lt; n; i++) &#123;                let term = coef[i];                for (let j = 0; j &lt; i; j++) &#123;                    term *= (t - x[j]);                &#125;                result += term;            &#125;            return result;        &#125;;    &#125;    // Valores de x e y    let x = [1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9];    let y = [0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8];    // Selecionar elementos do formulário e resultado    const form = document.getElementById(&#39;inputForm&#39;);    const tInput = document.getElementById(&#39;t&#39;);    const resultDiv = document.getElementById(&#39;result&#39;);    // Função para lidar com o envio do formulário    form.addEventListener(&#39;submit&#39;, function(event) &#123;        event.preventDefault();  // Evitar o envio padrão do formulário        let t = parseFloat(tInput.value);  // Obter o valor de t inserido pelo usuário        // Obter o polinômio interpolador de Newton        let polynomial = newton_polynomial(x, y);        // Calcular o valor do polinômio interpolador para o valor de t inserido        let interpolationResult = polynomial(t);        // Exibir o resultado na página        resultDiv.innerHTML = `            &lt;p&gt;Valores de x utilizados: $&#123;x.join(&#39;, &#39;)&#125;&lt;/p&gt;            &lt;p&gt;Valores de y correspondentes: $&#123;y.join(&#39;, &#39;)&#125;&lt;/p&gt;            &lt;p&gt;O valor do polinômio interpolador em $&#123;t&#125; é $&#123;interpolationResult.toFixed(4)&#125;&lt;/p&gt;        `;    &#125;);&#125;</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Nesta atividade foi usada uma folha e tracou-se alguns pontos referentes a sua curvatura. Por meio desses pontos foi feito a interpolação</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Interpolação polinomial</title>
+    <link href="http://portfoliocngiovani.com/2024/06/22/interpolacao/"/>
+    <id>http://portfoliocngiovani.com/2024/06/22/interpolacao/</id>
+    <published>2024-06-22T13:00:00.000Z</published>
+    <updated>2024-06-22T22:38:45.828Z</updated>
+    
+    <content type="html"><![CDATA[<div class="container">    <h1 class="text-center">Interpolação de Newton e Lagrange</h1>    <form id="interpolationForm">        <div class="form-group">            <label for="xValues">Valores X (separação por vígula)</label>            <input type="text" class="form-control" id="xValues" placeholder="ex: 11,12,13,14,15">        </div>        <div class="form-group">            <label for="yValues">Valores Y (separação por vígula)</label>            <input type="text" class="form-control" id="yValues" placeholder="ex: 2.397895,2.484907,2.564949,2.639057,2.708050">        </div>        <div class="form-group">            <label for="tValue">Valor de t</label>            <input type="text" class="form-control" id="tValue" placeholder="ex: 12.3">        </div>        <button type="button" class="btn btn-primary" onclick="calculateNewton()">Calcular Newton</button>        <button type="button" class="btn btn-secondary" onclick="calculateLagrange()">Calcular Lagrange</button>    </form>    <div id="result" class="result"></div></div><script>    function dividedDiff(x, y) {        let n = y.length;        let coef = [y.slice()];        for (let j = 1; j < n; j++) {            let row = [];            for (let i = 0; i < n - j; i++) {                row.push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));            }            coef.push(row);        }        return coef.map(row => row[0]);    }    function newtonPolynomial(x, y) {        let coef = dividedDiff(x, y);        let n = coef.length;        return function(t) {            let result = coef[0];            for (let i = 1; i < n; i++) {                let term = coef[i];                for (let j = 0; j < i; j++) {                    term *= (t - x[j]);                }                result += term;            }            return result;        };    }    function lagrangePolynomial(x, y) {        function L(k, t) {            let result = 1;            for (let i = 0; i < x.length; i++) {                if (i !== k) {                    result *= (t - x[i]) / (x[k] - x[i]);                }            }            return result;        }        return function(t) {            let result = 0;            for (let k = 0; k < y.length; k++) {                result += y[k] * L(k, t);            }            return result;        };    }    function calculateNewton() {        let xValues = document.getElementById('xValues').value.split(',').map(Number);        let yValues = document.getElementById('yValues').value.split(',').map(Number);        let tValue = parseFloat(document.getElementById('tValue').value);        let polynomial = newtonPolynomial(xValues, yValues);        let result = polynomial(tValue);        document.getElementById('result').innerHTML = `<div class="alert alert-primary">Resultado do polinômio de Newton em t=${tValue}: ${result}</div>`;    }    function calculateLagrange() {        let xValues = document.getElementById('xValues').value.split(',').map(Number);        let yValues = document.getElementById('yValues').value.split(',').map(Number);        let tValue = parseFloat(document.getElementById('tValue').value);        let polynomial = lagrangePolynomial(xValues, yValues);        let result = polynomial(tValue);        document.getElementById('result').innerHTML = `<div class="alert alert-secondary">Resultado do polinômio de Lagrange em t=${tValue}: ${result}</div>`;    }</script><link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"><style>    body {        padding: 20px;    }    .result {        margin-top: 20px;    }</style>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;div class=&quot;container&quot;&gt;
+    &lt;h1 class=&quot;text-center&quot;&gt;Interpolação de Newton e Lagrange&lt;/h1&gt;
+    &lt;form id=&quot;interpolationForm&quot;&gt;
+        &lt;div cl</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>

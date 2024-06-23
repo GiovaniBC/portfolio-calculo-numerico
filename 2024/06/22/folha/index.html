@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Giovani Bruno Corrêa"><link rel="icon" href="/hexo.png"><title>Portfólio cálculo numérico</title><meta name="description" content=""><link rel="alternate" type="application/rss+xml" title="Portfólio cálculo numérico" href="/atom.xml"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/highlight.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"><meta name="generator" content="Hexo 7.2.0"></head><body><nav class="navbar navbar-default navbar-fixed-top navbar-custom"><div class="container-fluid"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Portfólio cálculo numérico</a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><a href="/archives">Archive</a></li><li><a target="_blank" rel="noopener" href="https://github.com/twoyao/beautiful-hexo">Github</a></li><li><a href="/about/">About</a></li></ul></div><div class="avatar-container"><div class="avatar-img-border"><a href="/"><img src="/hexo.png" class="avatar-img"></a></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>Folha da Árvore</h1><p class="post-meta">Posted on jun 22 2024</p></div></div></div></div></div></header><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><article role="main" class="blog-post"><p>Nesta atividade foi usada uma folha e tracou-se alguns pontos referentes a sua curvatura. Por meio desses pontos foi feito a interpolação polinomial de Newton</p>
+<p>Aqui está uma imagem das medidas da folha:</p>
+<p><img src="/folha.png"></p>
+<p>Os valores de ( x ) e ( y ) obtidos foram:</p>
+<p>( x &#x3D; 1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9 )</p>
+<p>( y &#x3D; 0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8 )</p>
+<p>A seguir pode-se calcular a interpolação a partir dos valores obtidos da folha:</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpolação Polinomial de Newton</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 9000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #inputForm {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interpolação Polinomial de Newton</h1>  
+    <form id="inputForm">
+        <label for="t">Insira o valor de <em>t</em>:</label>
+        <input type="number" id="t" step="any" placeholder="Digite o valor de t">
+        <button type="submit">Calcular</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        function divided_diff(x, y) {
+            /**
+             * Calcula a tabela de diferenças divididas para os pontos (x, y).
+             */
+            let n = y.length;
+            let coef = [y.slice()];  // Inicializa com y (f(x)).
+            for (let j = 1; j < n; j++) {
+                coef.push([]);
+                for (let i = 0; i < n - j; i++) {
+                    coef[j].push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));
+                }
+            }
+            return coef.map(row => row[0]);  // Retorna os coeficientes de Newton.
+        }
+        function newton_polynomial(x, y) {
+            /**
+             * Calcula o polinômio interpolador de Newton.
+             */
+            let coef = divided_diff(x, y);
+            let n = coef.length;
+            return function(t) {
+                let result = coef[0];
+                for (let i = 1; i < n; i++) {
+                    let term = coef[i];
+                    for (let j = 0; j < i; j++) {
+                        term *= (t - x[j]);
+                    }
+                    result += term;
+                }
+                return result;
+            };
+        }
+        // Valores de x e y
+        let x = [1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9];
+        let y = [0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8];
+        // Selecionar elementos do formulário e resultado
+        const form = document.getElementById('inputForm');
+        const tInput = document.getElementById('t');
+        const resultDiv = document.getElementById('result');
+        // Função para lidar com o envio do formulário
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();  // Evitar o envio padrão do formulário
+            let t = parseFloat(tInput.value);  // Obter o valor de t inserido pelo usuário
+            // Obter o polinômio interpolador de Newton
+            let polynomial = newton_polynomial(x, y);
+            // Calcular o valor do polinômio interpolador para o valor de t inserido
+            let interpolationResult = polynomial(t);
+            // Exibir o resultado na página
+            resultDiv.innerHTML = `
+                <p>Valores de x utilizados: ${x.join(', ')}</p>
+                <p>Valores de y correspondentes: ${y.join(', ')}</p>
+                <p>O valor do polinômio interpolador em ${t} é ${interpolationResult.toFixed(4)}</p>
+            `;
+        });
+    </script>
+</body>
+
+<p>Abaixo está a lógica do código em JavaScript usado para calcular o polinômio interpolador de Newton com esses valores:</p>
+<pre><code>function divided_diff(x, y) &#123;
+
+let n = y.length;
+let coef = [y.slice()];
+
+        for (let j = 1; j &lt; n; j++) &#123;
+            coef.push([]);
+            for (let i = 0; i &lt; n - j; i++) &#123;
+                coef[j].push((coef[j - 1][i + 1] - coef[j - 1][i]) / (x[i + j] - x[i]));
+            &#125;
+        &#125;
+
+        return coef.map(row =&gt; row[0]);  // Retorna os coeficientes de Newton.
+    &#125;
+
+    function newton_polynomial(x, y) &#123;
+        /**
+         * Calcula o polinômio interpolador de Newton.
+         */
+        let coef = divided_diff(x, y);
+        let n = coef.length;
+
+        return function(t) &#123;
+            let result = coef[0];
+            for (let i = 1; i &lt; n; i++) &#123;
+                let term = coef[i];
+                for (let j = 0; j &lt; i; j++) &#123;
+                    term *= (t - x[j]);
+                &#125;
+                result += term;
+            &#125;
+            return result;
+        &#125;;
+    &#125;
+
+    // Valores de x e y
+    let x = [1, 1.5, 2.2, 3.3, 4.2, 5.2, 5.9];
+    let y = [0.6, 0.8, 0.9, 1.1, 1.2, 0.9, 0.8];
+
+    // Selecionar elementos do formulário e resultado
+    const form = document.getElementById(&#39;inputForm&#39;);
+    const tInput = document.getElementById(&#39;t&#39;);
+    const resultDiv = document.getElementById(&#39;result&#39;);
+
+    // Função para lidar com o envio do formulário
+    form.addEventListener(&#39;submit&#39;, function(event) &#123;
+        event.preventDefault();  // Evitar o envio padrão do formulário
+
+        let t = parseFloat(tInput.value);  // Obter o valor de t inserido pelo usuário
+
+        // Obter o polinômio interpolador de Newton
+        let polynomial = newton_polynomial(x, y);
+
+        // Calcular o valor do polinômio interpolador para o valor de t inserido
+        let interpolationResult = polynomial(t);
+
+        // Exibir o resultado na página
+        resultDiv.innerHTML = `
+            &lt;p&gt;Valores de x utilizados: $&#123;x.join(&#39;, &#39;)&#125;&lt;/p&gt;
+            &lt;p&gt;Valores de y correspondentes: $&#123;y.join(&#39;, &#39;)&#125;&lt;/p&gt;
+            &lt;p&gt;O valor do polinômio interpolador em $&#123;t&#125; é $&#123;interpolationResult.toFixed(4)&#125;&lt;/p&gt;
+        `;
+    &#125;);
+&#125;
+</code></pre>
+</article><ul class="pager blog-pager"><li class="previous"><a href="/2024/06/22/lista/" data-toggle="tooltip" data-placement="top" title="Lista de Exercícios">← Previous Post</a></li><li class="next"><a href="/2024/06/22/interpolacao/" data-toggle="tooltip" data-placement="top" title="Interpolação polinomial">Next Post →</a></li></ul><div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div><script src="//img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"> </script><script>var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "64d7f0abf9224be3bfdcc6cfb9b83fcf",
+  target: "cloud-tie-wrapper"
+};</script></div></div></div><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center footer-links"><li><a target="_blank" rel="noopener" href="https://github.com/GiovaniBC" title="GitHub"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-github"></i></span></a></li></ul><p class="copyright text-muted">© Giovani Bruno Corrêa • 2024 • <a href="mailto:undefined"></a>
+</p><p class="theme-by text-muted">Theme by
+<a target="_blank" rel="noopener" href="https://github.com/twoyao/beautiful-hexo">beautiful-hexo</a></p></div></div></div></footer><script src="//cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script></body></html>
