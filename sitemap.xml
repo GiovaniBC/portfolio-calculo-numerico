@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://portfoliocngiovani.com/2024/06/22/folha/</loc>
+    <loc>http://example.com/2024/06/22/folha/</loc>
     
     <lastmod>2024-06-23</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://portfoliocngiovani.com/2024/06/22/lista/</loc>
+    <loc>http://example.com/2024/06/22/lista/</loc>
     
     <lastmod>2024-06-23</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://portfoliocngiovani.com/2024/06/22/interpolacao/</loc>
+    <loc>http://example.com/2024/06/22/interpolacao/</loc>
     
     <lastmod>2024-06-22</lastmod>
     
@@ -30,7 +30,7 @@
   
 
   <url>
-    <loc>http://portfoliocngiovani.com/</loc>
+    <loc>http://example.com/</loc>
     <lastmod>2024-06-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
